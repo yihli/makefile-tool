@@ -11,14 +11,14 @@ print_files() {
 	do
 		echo $count')' "$i"
 		((count++))
+
 	done
 }
 
 # store all the cpp files found in the directory in an array
 get_files() {
-
 	input=$(ls "$directory")
-
+	
 	# need to fix double quote error from shellcheck here
 	for i in ${input[@]}
 	do
@@ -26,10 +26,18 @@ get_files() {
 			files+=("$i")
 		fi
 	done
+
+	if [[ ${#files[@]} =~ 0 ]]; then
+		echo No .cpp files were found in "$directory". Did you specify the right directory?
+		exit 1
+	fi	
+
 }
 
 # verifies given directory exists
 check_argument() {
+
+	# -d checks if a directory exists 
 	if ! [ -d "$directory" ]; then
 		echo \["$directory"\] is not a valid directory. 
 		echo Usage: bash makefile-tool.sh \[directory\]
