@@ -1,20 +1,41 @@
 #!/bin/bash
 
+check_for_main() {
+	found=false
+
+	# read line by line to look for int main 
+	while IFS= read -r line; do
+		if [[ $line =~ ^[[:space:]]*int[[:space:]]*main[[:space:]]*\(.*\) ]]; then
+			echo Int main was found. Connecting headers...
+			found=true
+			
+		fi
+	done < $directory$chosen_file
+
+	# int main ont found
+	if ! [[ found ]]; then
+		echo The specified .cpp file does not contain int main. Exiting...
+		exit 1
+	fi
+}
+
 prompt() {
 	name_arg=()
 
 	read -p "Please enter a name for your executable: " name
 	name_arg+=($name)
 
-	echo ${name_arg[0]}
+	echo Your executable will be named \"${name_arg[0]}\"
 	
-	while read -r item; do 
-		if [[ -z "$item" ]]; then
-			break
-		fi
+	read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
 
-		echo $item
-	done
+	# if there was no user input
+	if [[ -z "$chosen_file" ]]; then
+		echo No file was specified. Exiting...
+		exit 1
+	fi
+
+		echo $chosen_file
 }
 
 # list all the cpp files in files array.
@@ -78,3 +99,6 @@ check_argument
 get_files
 print_files
 prompt
+check_for_main
+
+
