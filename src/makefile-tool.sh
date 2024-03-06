@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO: check if makefile exists and ask for overwrite confirmation
+
 check_for_main() {
 	found=false
 

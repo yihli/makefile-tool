@@ -37,18 +37,31 @@ void find_headers(std::string file_name, std::set<std::string>& header_names) {
             std::string name(match[1]);
             name[name.size() - 1] = 'c';
             name.append("pp");
-            directory.append(name);
 
             // std::cout << "adding " << name << " to set " << std::endl; //print out the captured group
 
             header_names.insert(name);
 
-            find_headers(directory, header_names);
+            find_headers(directory + name, header_names);
+
         }
     }
 
     file.close();
 }
+
+void create_makefile() {
+    // creating Makefile file. overwrites existing Makefile.
+    std::ofstream file("Makefile");
+
+    file << "(CXX)=g++" << '\n';
+    file << "(CXXFLAGS)=-Wall" << "\n\n";
+    file << "all : " << '\n';
+    
+    std::cout << "Makefile created." << std::endl;
+    file.close();
+}
+
 
 int main (int argc, char** argv) {
     std::set<std::string> header_names;
@@ -58,6 +71,8 @@ int main (int argc, char** argv) {
     for (auto iter = header_names.begin(); iter != header_names.end(); iter++) {
         std::cout << *iter << '\n';
     }
+
+    create_makefile();
 
     return 0;
 }
