@@ -3,14 +3,18 @@
 #TODO: check if makefile exists and ask for overwrite confirmation
 
 check_for_main() {
+
 	found=false
+	exec_name=$1
+
+	echo $exec_name
 
 	# read line by line to look for int main 
 	while IFS= read -r line; do
 		if [[ $line =~ ^[[:space:]]*int[[:space:]]*main[[:space:]]*\(.*\) ]]; then
 			echo Int main was found. Connecting headers...
 			found=true
-			./find_includes $directory$chosen_file ${name_arg[0]}
+			./find_includes $directory$chosen_file ${exec_name}
 		fi
 	done < $directory$chosen_file
 
@@ -22,12 +26,12 @@ check_for_main() {
 }
 
 prompt() {
-	name_arg=()
+	exec_names=()
 
 	read -p "Please enter a name for your executable: " name
-	name_arg+=($name)
+	exec_names+=($name)
 
-	echo Your executable will be named \"${name_arg[0]}\"
+	echo Your executable will be named \"${exec_names[0]}\"
 	
 	read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
 
@@ -37,7 +41,6 @@ prompt() {
 		exit 1
 	fi
 
-		echo $chosen_file
 }
 
 # list all the cpp files in files array.
@@ -59,7 +62,6 @@ print_files() {
 get_files() {
 	input=$(ls "$directory")
 	
-	# need to fix double quote error from shellcheck here
 	for i in ${input[@]}
 	do
 		if [[ $i =~ ^(.*\.cpp)$ ]]; then
@@ -101,6 +103,6 @@ check_argument
 get_files
 print_files
 prompt
-check_for_main
+check_for_main ${exec_names[0]}
 
 
