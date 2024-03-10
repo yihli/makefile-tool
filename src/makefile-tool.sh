@@ -10,11 +10,11 @@ check_for_main() {
 		if [[ $line =~ ^[[:space:]]*int[[:space:]]*main[[:space:]]*\(.*\) ]]; then
 			echo Int main was found. Connecting headers...
 			found=true
-			g
+			./a.out $directory$chosen_file ${name_arg[0]}
 		fi
 	done < $directory$chosen_file
 
-	# int main ont found
+	# int main not found
 	if ! [[ found ]]; then
 		echo The specified .cpp file does not contain int main. Exiting...
 		exit 1

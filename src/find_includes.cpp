@@ -20,7 +20,6 @@ std::string get_directory(std::string file_name) {
 void find_headers(std::string file_name, std::set<std::string>& header_names) {
     std::regex pattern("[[:space:]]*#include[[:space:]]*\"(.*)\""); // create a pattern object from regex library
     std::string directory = get_directory(file_name);
-    // add f_name
     std::smatch match; // for capture groups
     std::fstream file;
     std::string line;
@@ -35,29 +34,39 @@ void find_headers(std::string file_name, std::set<std::string>& header_names) {
         // error with regex_match because it considers the ENTIRE string
         if (std::regex_search(line, match, pattern)) {
             std::string name(match[1]);
+
+            // changing extension to find the files
             name[name.size() - 1] = 'c';
             name.append("pp");
-
-            // std::cout << "adding " << name << " to set " << std::endl; //print out the captured group
-
-            header_names.insert(name);
-
             find_headers(directory + name, header_names);
-
+            // TODO: change extension to .o 
+            name.erase(name.size() - 3, 3);
+            name.append("o");
+            header_names.insert(name);
         }
     }
 
     file.close();
 }
 
-void create_makefile() {
+void create_makefile(std::set<std::string>& header_names, std::string exec_name) {
     // creating Makefile file. overwrites existing Makefile.
     std::ofstream file("Makefile");
 
     file << "(CXX)=g++" << '\n';
     file << "(CXXFLAGS)=-Wall" << "\n\n";
-    file << "all : " << '\n';
+    file << "all : " << exec_name << "\n\n";
+
+    file << exec_name << ": ";
     
+    for (auto iter = header_names.begin(); iter != header_names.end(); iter++) {
+        file << *iter << " ";
+    }
+
+    file << "\n\t$(CXX) $^ -o $@" << "\n\n";
+    file << "clean: \n";
+    file << "\trm -f *.o " << exec_name;
+
     std::cout << "Makefile created." << std::endl;
     file.close();
 }
@@ -67,12 +76,7 @@ int main (int argc, char** argv) {
     std::set<std::string> header_names;
 
     find_headers(argv[1], header_names);
-
-    for (auto iter = header_names.begin(); iter != header_names.end(); iter++) {
-        std::cout << *iter << '\n';
-    }
-
-    create_makefile();
+    create_makefile(header_names, argv[2]);
 
     return 0;
 }
