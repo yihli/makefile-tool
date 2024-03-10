@@ -17,6 +17,21 @@ std::string get_directory(std::string file_name) {
     return directory_name;
 }
 
+std::string get_file_name(std::string file_name) {
+    std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
+    std::smatch match;
+    std::string main_file;
+
+    // extracting the directory from the file path
+    std::regex_search(file_name, match, directory_pattern);
+    main_file = match[2];
+    main_file.erase(main_file.size() - 3, 3);
+    main_file.append("o");
+    std::cout << main_file << '\n';
+
+    return main_file;
+}
+
 void find_headers(std::string file_name, std::set<std::string>& header_names) {
     std::regex pattern("[[:space:]]*#include[[:space:]]*\"(.*)\""); // create a pattern object from regex library
     std::string directory = get_directory(file_name);
@@ -33,13 +48,22 @@ void find_headers(std::string file_name, std::set<std::string>& header_names) {
     while (std::getline(file, line)) {
         // error with regex_match because it considers the ENTIRE string
         if (std::regex_search(line, match, pattern)) {
-            std::string name(match[1]);
 
+            std::string name(match[1]);
+            
+            // optimize this
             // changing extension to find the files
             name[name.size() - 1] = 'c';
             name.append("pp");
+
+            // check to see if headers are being repeated. 
+            if (file_name.compare(directory + name) == 0) {
+                std::cout << "duplicate name found" << std::endl;
+                std::cout << directory + name << std::endl;
+                continue;
+            }
+
             find_headers(directory + name, header_names);
-            // TODO: change extension to .o 
             name.erase(name.size() - 3, 3);
             name.append("o");
             header_names.insert(name);
@@ -75,7 +99,9 @@ void create_makefile(std::set<std::string>& header_names, std::string exec_name,
 int main (int argc, char** argv) {
     std::set<std::string> header_names;
     std::string directory = get_directory(argv[1]);
+    std::string main_file = get_file_name(argv[1]);
 
+    header_names.insert(main_file);
     find_headers(argv[1], header_names);
     
     create_makefile(header_names, argv[2], directory);
