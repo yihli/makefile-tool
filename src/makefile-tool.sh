@@ -10,7 +10,7 @@ check_for_main() {
 		if [[ $line =~ ^[[:space:]]*int[[:space:]]*main[[:space:]]*\(.*\) ]]; then
 			echo Int main was found. Connecting headers...
 			found=true
-			./a.out $directory$chosen_file ${name_arg[0]}
+			./find_includes $directory$chosen_file ${name_arg[0]}
 		fi
 	done < $directory$chosen_file
 

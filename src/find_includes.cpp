@@ -49,9 +49,9 @@ void find_headers(std::string file_name, std::set<std::string>& header_names) {
     file.close();
 }
 
-void create_makefile(std::set<std::string>& header_names, std::string exec_name) {
+void create_makefile(std::set<std::string>& header_names, std::string exec_name, std::string dir) {
     // creating Makefile file. overwrites existing Makefile.
-    std::ofstream file("Makefile");
+    std::ofstream file(dir + "Makefile");
 
     file << "(CXX)=g++" << '\n';
     file << "(CXXFLAGS)=-Wall" << "\n\n";
@@ -74,9 +74,11 @@ void create_makefile(std::set<std::string>& header_names, std::string exec_name)
 
 int main (int argc, char** argv) {
     std::set<std::string> header_names;
+    std::string directory = get_directory(argv[1]);
 
     find_headers(argv[1], header_names);
-    create_makefile(header_names, argv[2]);
+    
+    create_makefile(header_names, argv[2], directory);
 
     return 0;
 }
