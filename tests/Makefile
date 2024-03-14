@@ -1,10 +1,10 @@
 (CXX)=g++
 (CXXFLAGS)=-Wall
 
-all : sadf
+all : sdf
 
-sadf: end.o end2.o header1.o header2.o header3.o lol.o wow.o 
+sdf: end.o end2.o header1.o header2.o header3.o lol.o wow.o 
 	$(CXX) $^ -o $@
 
 clean: 
-	rm -f *.o sadf
+	rm -f *.o sdf
