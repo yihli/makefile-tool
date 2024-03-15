@@ -26,20 +26,23 @@ check_for_main() {
 prompt() {
 	exec_names=()
 
-	read -p "Please enter a name for your executable: " name
-	exec_names+=($name)
+	while true
+	do
+		read -p "Please enter a name for your executable: " name
+		exec_names+=($name)
 
-	echo Your executable will be named \"${name}\"
-	
-	read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
+		echo Your executable will be named \"${name}\"
+		
+		read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
 
-	# if there was no user input
-	if [[ -z "$chosen_file" ]]; then
-		echo No file was specified. Exiting...
-		exit 1
-	fi
+		# if there was no user input
+		if [[ -z "$chosen_file" ]]; then
+			echo No file was specified. Exiting...
+			exit 1
+		fi
 
-	check_for_main ${exec_names[0]}
+		check_for_main ${name}
+	done
 
 }
 
