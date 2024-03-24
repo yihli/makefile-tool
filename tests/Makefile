@@ -1,10 +1,10 @@
 (CXX)=g++
 (CXXFLAGS)=-Wall
 
-all : testing
+all : pyu
 
-testing: end.o end2.o header1.o header2.o header3.o lol.o wow.o 
+pyu: end.o end2.o header1.o header2.o header3.o lol.o wow.o 
 	$(CXX) $^ -o $@
 
 clean: 
-	rm -f *.o testing
+	rm -f *.o pyu
