@@ -6,37 +6,35 @@
 
 #include "file_searcher.h"
 
-std::string FileSearcher::getDirectory(std::string file_name) {
+void FileSearcher::getDirectory(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
-    std::string directory_name;
+    // std::string directory_name;
 
     // extracting the directory from the file path
     std::regex_search(file_name, match, directory_pattern);
-    directory_name = match[1];
-    std::cout << directory_name << '\n';
+    directory = match[1];
 
-    return directory_name;
 }
 
-std::string FileSearcher::getFileName(std::string file_name) {
+void FileSearcher::getFileName(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
-    std::string main_file;
+    // std::string main_file;
 
     // extracting the directory from the file path
     std::regex_search(file_name, match, directory_pattern);
     main_file = match[2];
     main_file.erase(main_file.size() - 3, 3);
     main_file.append("o");
-    std::cout << main_file << '\n';
+    header_names.insert(main_file);
 
-    return main_file;
+    // return main_file;
 }
 
 void FileSearcher::findHeaders(std::string file_name, std::set<std::string>& header_names) {
     std::regex pattern("[[:space:]]*#include[[:space:]]*\"(.*)\""); // create a pattern object from regex library
-    std::string directory = getDirectory(file_name);
+    // std::string directory = getDirectory(file_name);
     std::smatch match; // for capture groups
     std::fstream file;
     std::string line;

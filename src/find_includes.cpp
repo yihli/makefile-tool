@@ -9,13 +9,13 @@
 
 int main (int argc, char** argv) {
     FileSearcher fs;
-    std::string directory = fs.getDirectory(argv[1]);
-    std::string main_file = fs.getFileName(argv[1]);
+    fs.getDirectory(argv[1]);
+    fs.getFileName(argv[1]);
 
-    fs.header_names.insert(main_file);
+    fs.header_names.insert(fs.main_file);
     fs.findHeaders(argv[1], fs.header_names);
     
-    createMakefile(fs.header_names, argv[2], directory);
+    createMakefile(fs.header_names, argv[2], fs.directory);
 
     return 0;
 }
