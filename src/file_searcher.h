@@ -6,9 +6,10 @@
 
 class FileSearcher {
     public:
+    FileSearcher(std::string file_name);
     void getDirectory(std::string file_name);
     void getFileName(std::string file_name);
-    void findHeaders(std::string file_name, std::set<std::string>& header_names);
+    void findHeaderNames(std::string file_name);
 
     // private:
     std::set<std::string> header_names;

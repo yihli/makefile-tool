@@ -1,7 +1,6 @@
 #!/bin/bash
 
 check_for_main() {
-
 	found=false
 	exec_name=$1
 
@@ -26,24 +25,20 @@ check_for_main() {
 prompt() {
 	exec_names=()
 
-	while true
-	do
-		read -p "Please enter a name for your executable: " name
-		exec_names+=($name)
+	read -p "Please enter a name for your executable: " name
+	exec_names+=($name)
 
-		echo Your executable will be named \"${name}\"
-		
-		read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
+	echo Your executable will be named \"${name}\"
+	
+	read -r -p "Please specify which .cpp file contains \"int main()\": " chosen_file
 
-		# if there was no user input
-		if [[ -z "$chosen_file" ]]; then
-			echo No file was specified. Exiting...
-			exit 1
-		fi
+	# if there was no user input
+	if [[ -z "$chosen_file" ]]; then
+		echo No file was specified. Exiting...
+		exit 1
+	fi
 
-		check_for_main ${name}
-	done
-
+	check_for_main ${name}
 }
 
 # list all the cpp files in files array.
@@ -78,12 +73,10 @@ get_files() {
 		echo Did you specify the right directory?
 		exit 1
 	fi	
-
 }
 
 # verifies given directory exists
 check_argument() {
-
 	# -d checks if a directory exists 
 	if ! [ -d "$directory" ]; then
 		echo \["$directory"\] is not a valid directory. 
@@ -106,6 +99,3 @@ check_argument
 get_files
 print_files
 prompt
-
-
-
