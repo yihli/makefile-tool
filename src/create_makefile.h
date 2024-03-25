@@ -5,5 +5,4 @@
 
 void createMakefile(std::set<std::string>& header_names, std::string exec_name, std::string dir);
 
-
 #endif

@@ -72,4 +72,3 @@ void FileSearcher::findHeaderNames(std::string file_name) {
     }
     file.close();
 }
-
