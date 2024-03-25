@@ -4,9 +4,16 @@
 #include <set>
 #include <fstream>
 
-#include "create_makefile.h"
 #include "file_searcher.h"
 
+/*
+ * FileSearcher class constructor
+ * Initializes a FileSearcher object with the directory, .cpp main file name, 
+ * and a set containing all the headers used by the files connected to the main
+ * file. 
+ *
+ * @param file_name: the path to the main .cpp file
+ */
 FileSearcher::FileSearcher(std::string file_name) {
     getDirectory(file_name);
     getFileName(file_name);
@@ -14,6 +21,12 @@ FileSearcher::FileSearcher(std::string file_name) {
     header_names.insert(main_file);
 }
 
+/* 
+ * Extracts the directory from a file_name. Used in the FileSearcher class 
+ * constructor. 
+ * 
+ * @param file_name: the path to the main .cpp file
+ */
 void FileSearcher::getDirectory(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
@@ -23,6 +36,13 @@ void FileSearcher::getDirectory(std::string file_name) {
     directory = match[1];
 }
 
+/*
+ * Extracts the file name from a path. Used in the FileSearcher class 
+ * constructor. 
+ *
+ * @param: file_name: the path to the main .cpp file
+ *
+ */
 void FileSearcher::getFileName(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
@@ -35,6 +55,13 @@ void FileSearcher::getFileName(std::string file_name) {
     header_names.insert(main_file);
 }
 
+/*
+ * Given a path to a .cpp file, searches for the included headers and opens the
+ * corresponding .cpp files to search for those headers. Puts all the headers
+ * into a set. Used in the FileSearcher class constructor.
+ *
+ * @param file_name: path to the main .cpp file
+ */
 void FileSearcher::findHeaderNames(std::string file_name) {
     std::regex pattern("[[:space:]]*#include[[:space:]]*\"(.*)\""); // create a pattern object from regex library
     std::smatch match; // for capture groups
