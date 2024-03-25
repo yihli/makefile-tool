@@ -6,5 +6,5 @@ From any terminal that can run bash scripts such as Windows PowerShell or Linux,
 
 ```./makefile-tool.sh <path-to-files>```
 
-Make sure ```makefile-tool.sh``` and ```find_includes``` are located in the same directory.
+Make sure ```makefile-tool.sh``` and ```find_includes``` are located in the current directory of your terminal.
 
