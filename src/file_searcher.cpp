@@ -4,23 +4,28 @@
 #include <set>
 #include <fstream>
 
+#include "create_makefile.h"
 #include "file_searcher.h"
+
+FileSearcher::FileSearcher(std::string file_name) {
+    getDirectory(file_name);
+    getFileName(file_name);
+    findHeaderNames(file_name);
+    header_names.insert(main_file);
+}
 
 void FileSearcher::getDirectory(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
-    // std::string directory_name;
 
     // extracting the directory from the file path
     std::regex_search(file_name, match, directory_pattern);
     directory = match[1];
-
 }
 
 void FileSearcher::getFileName(std::string file_name) {
     std::regex directory_pattern("^(.+/)([^/]+)$"); // regex for the directory 
     std::smatch match;
-    // std::string main_file;
 
     // extracting the directory from the file path
     std::regex_search(file_name, match, directory_pattern);
@@ -28,13 +33,10 @@ void FileSearcher::getFileName(std::string file_name) {
     main_file.erase(main_file.size() - 3, 3);
     main_file.append("o");
     header_names.insert(main_file);
-
-    // return main_file;
 }
 
-void FileSearcher::findHeaders(std::string file_name, std::set<std::string>& header_names) {
+void FileSearcher::findHeaderNames(std::string file_name) {
     std::regex pattern("[[:space:]]*#include[[:space:]]*\"(.*)\""); // create a pattern object from regex library
-    // std::string directory = getDirectory(file_name);
     std::smatch match; // for capture groups
     std::fstream file;
     std::string line;
@@ -44,7 +46,6 @@ void FileSearcher::findHeaders(std::string file_name, std::set<std::string>& hea
     file.open(file_name, std::ios::in);
     std::cout << "opened " << file_name << std::endl;
 
-    // std::getline(file, line);
     while (std::getline(file, line)) {
         // error with regex_match because it considers the ENTIRE string
         if (std::regex_search(line, match, pattern)) {
@@ -63,13 +64,12 @@ void FileSearcher::findHeaders(std::string file_name, std::set<std::string>& hea
                 continue;
             }
 
-            findHeaders(directory + name, header_names);
+            findHeaderNames(directory + name);
             name.erase(name.size() - 3, 3);
             name.append("o");
             header_names.insert(name);
         }
     }
-
     file.close();
 }
 
